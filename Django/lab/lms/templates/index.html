@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block body %}
+        
+        
+<h3 class='m-4' align="center">Журнал заявок</h3>
+<div class="row">
+    <div class="col-12">
+        {% if journals %}
+        <div class="card bg-light me-4 ms-4 mb-4">
+          <div class="card-header"><a href="{% url 'add' %}" class="btn btn-success">Cоздать новую заявку</a></div>
+            
+            <div class="card-body">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#filterModal">
+                Открыть фильтры
+              </button>
+              <div class="modal" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel1" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="filterModalLabel">Фильтры</h5>
+                      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"></span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form method="GET">
+                        {{ filter.form.as_p }}
+                        <button type="submit" class="btn btn-primary">Применить</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <p class="card-text">
+                <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">Номер</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Фамилия</th>
+                        <th scope="col">Дата рождения</th>
+                        <th scope="col">Дата создания</th>
+                        <th scope="col">Анализ</th>
+                        <th scope="col">Подразделение</th>
+                        <th scope="col">Стутус</th>
+                        <th scope="col">Действие</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {%for journal in journals %}
+                            <tr class="table-active">
+                                
+                                <td>{{ journal.number }}</td>
+                                <td>{{ journal.client_name }}</td>
+                                <td>{{ journal.client_surname }}</td>
+                                <td>{{ journal.birth }}</td>
+                                <td>{{ journal.date_time }}</td>
+                                <td>
+                                  {% for cat in journal.analysis_name.all %}
+                                  {{cat}}
+                                  {% endfor %}
+                                </td>                         
+                                <td>{% for cat in journal.analysis_cathegory.all %}
+                                    {{cat}}
+                                    {% endfor %}
+                                </td>
+                                <td><span class="badge bg-primary">{{ journal.is_done }}</span></td>
+                                <td>
+                                  <button type="button" class="btn btn-success me-1" href="{% url 'view_journal' journal.id %}" data-bs-toggle="modal" data-bs-target="#myModal{{journal.id}}">
+                                    <i class="fa-solid fa-circle-info fa-lg"></i>
+                                  </button>
+            
+                                  <!-- Modal - View -->
+                                  <div class="modal" id="myModal{{journal.id}}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title">
+                                            Клиент: {{ journal.client_name }} {{ journal.client_surname }}
+                                          </h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true"></span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <ul class="list-unstyled">
+                                            <li>Пол: <strong>{{ journal.sex }}</strong></li>
+                                            <li>Дата рождения: <strong>{{ journal.birth }}</strong></li>
+                                            <li>Телефон: <strong>{{ journal.client_phone }}</strong></li>
+                                            <li>Подразделение: <strong>{% for cat in journal.analysis_cathegory.all %}
+                                              {{cat}}
+                                              {% endfor %}</strong></li>
+                                            <li>Название анализа: <strong>{% for cat in journal.analysis_name.all %}
+                                              {{cat}}
+                                              {% endfor %}</strong></li>
+                                            <li>Норма: <strong>{{ journal.norma }}</strong></li>
+                                            <li>Результат: <strong>{{ journal.description }}</strong></li>
+                                            <li>Статус: <strong>{{ journal.is_done }}</strong></li>
+                                          </ul>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <a href="{% url 'journal_report' journal_id=journal.id %}" class="btn btn-primary">Сформировать отчет</a>
+                                          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Закрыть</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  <a class="btn btn-warning me-1" href="{% url 'edit' journal.id %}">
+                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                  </a>
+            
+                                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{journal.id}}">
+                                    <i class="fa-solid fa-trash-can fa-lg"></i>
+                                  </button>
+            
+                                  <!-- Modal - Delete -->
+                                  <div class="modal" id="delete{{journal.id}}" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title">
+                                            Клиент: {{ journal.client_name }} {{ journal.client_surname }}
+                                          </h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true"></span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>Уверены что хотите удалить заявку?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <form action="{% url 'delete' journal.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" class="btn btn-primary" value="Удалить">
+                                          </form>
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                </td>
+                                {% endfor %}
+                              </tr> 
+                    </tbody>
+
+              </p>
+            </table>
+            </div>
+          </div>         
+
+        {% else %}
+        <div class="alert alert-dismissible alert-primary">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>Ничего не найдено</strong> или <a href="{% url 'index' %}" class="alert-link">сегодня не было заявок</a>
+          </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

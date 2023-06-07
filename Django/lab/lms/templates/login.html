@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div style="display: flex; justify-content: center;">
+<div class="card bg-light me-4 ms-4 mb-4" style="margin-top: 100px; display: flex; justify-content: right; max-width: 30rem;">
+    <div class="card-header" align="center">Войти в систему</div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div style="justify-content: right; display: flex;"><button type="submit" class="btn btn-primary btn-block mt-4" align="right">Войти</button></div>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}

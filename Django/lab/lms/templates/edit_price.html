@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <h3 class="text-center m-4">Редактировать анализ</h3>
+  {% if success %}
+    <div class="alert alert-success" role="alert">
+      Анализ отредактирован.
+      <a href="{% url 'price' %}" class="alert-link">Вернуться на главную страницу.</a>
+    </div>
+  {% else %}
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <div class="card bg-light mb-3">
+          <div class="card-header">
+            <i class="fa-solid fa-pen-to-square fa-lg"></i> Редактировать анализ
+          </div>
+          <div class="card-body">
+            <form action="" method="POST">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <button type="submit" class="btn btn-primary">Редактировать</button>
+              <a href="{% url 'price' %}" class="btn btn-secondary">Отмена</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

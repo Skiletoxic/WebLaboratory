@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block body %}
+        
+        
+<h3 class='m-4' align="center">Список анализов</h3>
+<div class="row">
+    <div class="col-12">
+        {% if price %}
+        <div class="card bg-light me-4 ms-4 mb-4">
+            <div class="card-header"><a href="{% url 'add_price' %}" class="btn btn-success">Добавить</a></div>
+            
+            <div class="card-body">
+              <h4 class="card-title"></h4>
+              <p class="card-text">
+                <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">Название</th>
+                        <th scope="col">Биоматериал</th>
+                        <th scope="col">Срок готовности</th>
+                        <th scope="col">Цена</th>
+                        <th scope="col">Норма</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for p in price %}
+                            <tr class="table-active">
+                                
+                                <td>{{ p.name }}</td>
+                                <td>{{ p.bio }}</td>
+                                <td>{{ p.day }}</td>
+                                <td>{{ p.price }}</td>
+                                <td>{{ p.norma }}</td>
+                                <td>
+                                <a class="btn btn-warning me-1" href="{% url 'edit_price' p.id %}">
+                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                  </a>
+            
+                                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{p.id}}">
+                                    <i class="fa-solid fa-trash-can fa-lg"></i>
+                                  </button>
+            
+                                </td> 
+            
+                                  <!-- Modal - Delete Student -->
+                                  <div class="modal" id="delete{{p.id}}" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title">
+                                            Анализ: {{ p.name }} 
+                                          </h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true"></span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>Уверены что хотите удалить?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <form action="{% url 'delete_price' p.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" class="btn btn-primary" value="Удалить">
+                                          </form>
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                </td>
+                        
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+              </p>
+            </div>
+          </div>
+        {% else %}
+        <div class="alert alert-dismissible alert-primary">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>Ничего не найдено</strong></a>
+          </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

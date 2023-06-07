@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h1 style="margin: 20px; display: flex; justify-content:center">Статистика</h1>
+
+<div class="row" style="margin: 10px; display: flex; justify-content:center">
+  <div class="card bg-light me-4 ms-4 mb-4" style="max-width: 40rem; margin: 20px">
+    <div class="card-header"><h3>Статистика заказов</h3></div>
+    <div class="card-body">
+      <p class="card-text">Количество заказов: {{ orders_count }}</p>
+      <p class="card-text">Количество заказов за месяц: {{ month_count }}</p>
+      <p class="card-text">Количество заказов сегодня: {{ today_count }}</p>
+      <p class="card-text">Количество объектов с статусом "Не готово": {{ count }}</p>
+    </div>
+  </div>
+
+  <div class="card border-primary me-4 ms-4 mb-4" style="max-width: 40rem; margin: 20px">
+    <div class="card-header bg-light"><h3>Заказы по категориям анализов за текущий месяц</h3></div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+          <tr class="table-primary">
+            <th scope="col">Категория</th>
+            <th>Количество заказов</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders_by_category %}
+            <tr class="table-light">
+              <td scope="row"><button type="button" class="btn btn-primary disabled">{{ order.analysis_cathegory__name }}</button></td>
+              <td>
+                
+                <button type="button" class="btn btn-primary disabled">{{ order.total_orders }}</button>
+
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
